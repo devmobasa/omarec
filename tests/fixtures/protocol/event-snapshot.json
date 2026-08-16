@@ -1,0 +1,19 @@
+{
+  "protocol": 1,
+  "sequence": 7,
+  "daemon_lifetime_id": "00000000-0000-0000-0000-000000000002",
+  "event": {
+    "type": "snapshot",
+    "watermark": 7,
+    "snapshot": {
+      "session_id": null,
+      "phase": "idle",
+      "output": null,
+      "started_realtime_ms": null,
+      "first_frame_monotonic_us": null,
+      "paused": false,
+      "last_error": null,
+      "warnings": []
+    }
+  }
+}

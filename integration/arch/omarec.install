@@ -1,0 +1,19 @@
+post_install() {
+  printf '%s\n' \
+    'omarec installed.' \
+    'Native routing is the idle default. Roll back with OMAREC_SCREENRECORDING=0.' \
+    'The CLI starts omarecd through the user systemd manager on first use.' \
+    'Enable saved-recording notifications: systemctl --user enable --now omarec-notify.service' \
+    'Qualify this host with: omarec doctor' \
+    'Hardware evidence: scripts/hardware-qualify.sh <row-id>'
+}
+
+post_upgrade() {
+  systemctl --user daemon-reload >/dev/null 2>&1 || true
+}
+
+post_remove() {
+  printf '%s\n' \
+    'omarec removed. If recordings still route through the dispatcher, set OMAREC_SCREENRECORDING=0' \
+    'and restore omarchy-capture-screenrecording-legacy from the Omarchy package.'
+}

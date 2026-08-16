@@ -1,0 +1,148 @@
+{
+  "schema": "omarec.parity.v1",
+  "pins": {
+    "regular_commit": "10c42afcf25163d78663e59f02f6de82db07ea0f",
+    "quattro_commit": "8b9e43d3e54f7b790788aa9fbb04ea61a78de5bd",
+    "quattro_region_commit": "199bd01f9400a6b784365b686f9c51ae9d45a150",
+    "gsr_version": "6.0.0"
+  },
+  "cases": [
+    {
+      "id": "regular.fullscreen-equivalent-monitor",
+      "variant": "regular",
+      "argv": [],
+      "selector": { "result": "monitor:DP-1" },
+      "expected": {
+        "gsr_args_contains": ["-w", "DP-1", "-k", "auto", "-f", "60", "-fm", "cfr", "-fallback-cpu-encoding", "yes"],
+        "audio": [],
+        "output_pattern": "screenrecording-%Y-%m-%d_%H-%M-%S.mp4",
+        "output_dir_env": ["OMARCHY_SCREENRECORD_DIR", "XDG_VIDEOS_DIR"],
+        "coordinate_space": null
+      }
+    },
+    {
+      "id": "regular.region-logical-negative-origin",
+      "variant": "regular",
+      "argv": [],
+      "selector": { "result": "region:1920x1080+-1920+0", "coordinate_space": "logical" },
+      "expected": {
+        "gsr_args_contains": ["-w", "1920x1080+-1920+0"],
+        "must_not_relabel_as": "physical_pixels",
+        "coordinate_space": "logical"
+      }
+    },
+    {
+      "id": "regular.desktop-and-microphone-mixed",
+      "variant": "regular",
+      "argv": ["--with-desktop-audio", "--with-microphone-audio"],
+      "expected": {
+        "audio_args": ["-a", "default_output|default_input", "-ac", "aac"],
+        "audio_track_count": 1
+      }
+    },
+    {
+      "id": "regular.portal-opt-in",
+      "variant": "regular",
+      "env": { "OMARCHY_SCREENRECORD_USE_PORTAL": "true" },
+      "expected": {
+        "gsr_args_contains": ["-w", "portal"],
+        "selector_skipped": true
+      }
+    },
+    {
+      "id": "regular.selector-cancel",
+      "variant": "regular",
+      "selector": { "cancelled": true },
+      "expected": {
+        "creates_session": false,
+        "notification": false,
+        "exit_status": 0
+      }
+    },
+    {
+      "id": "regular.stop-by-process-name",
+      "variant": "regular",
+      "argv": ["--stop-recording"],
+      "expected": {
+        "stop_match": "process_name",
+        "signal": "SIGINT",
+        "force_kill_after_ms": 5000,
+        "native_must_not_copy": true
+      }
+    },
+    {
+      "id": "regular.stop-when-idle",
+      "variant": "regular",
+      "argv": ["--stop-recording"],
+      "active": false,
+      "expected": { "exit_status": 1 }
+    },
+    {
+      "id": "regular.postprocess-trim-and-loudnorm",
+      "variant": "regular",
+      "expected": {
+        "trim_seconds": 0.1,
+        "mute_first_ms": 400,
+        "fade_in_ms": 50,
+        "loudnorm": { "I": -14, "TP": -1.5, "LRA": 11 },
+        "reencode_if_discardable_warmup": true
+      }
+    },
+    {
+      "id": "regular.notify-after-save",
+      "variant": "regular",
+      "expected": {
+        "notify_after": "finalize_recording",
+        "open_action": "mpv filename"
+      }
+    },
+    {
+      "id": "quattro.fullscreen-focused-monitor",
+      "variant": "quattro",
+      "argv": ["--fullscreen"],
+      "expected": {
+        "selector_skipped": true,
+        "target": "focused_monitor",
+        "gsr_window_flag": "-w"
+      }
+    },
+    {
+      "id": "quattro.region-from-omarchy-capture-region",
+      "variant": "quattro",
+      "selector": {
+        "command": ["omarchy-capture-region", "smart", "--match-monitor"],
+        "result": "-1920,0 1920x1080",
+        "coordinate_space": "logical"
+      },
+      "expected": {
+        "gsr_args_contains": ["-w", "1920x1080+-1920+0"],
+        "coordinate_space": "logical"
+      }
+    },
+    {
+      "id": "quattro.webcam-size-medium",
+      "variant": "quattro",
+      "argv": ["--with-webcam", "--webcam-size=medium"],
+      "expected": {
+        "overlay": "mpv",
+        "size": "medium",
+        "native_percent": 25
+      }
+    },
+    {
+      "id": "quattro.webcam-size-invalid",
+      "variant": "quattro",
+      "argv": ["--with-webcam", "--webcam-size=huge"],
+      "expected": { "exit_status": 1 }
+    },
+    {
+      "id": "quattro.cancellation",
+      "variant": "quattro",
+      "selector": { "cancelled": true },
+      "expected": {
+        "creates_session": false,
+        "notification": false
+      }
+    }
+  ]
+}

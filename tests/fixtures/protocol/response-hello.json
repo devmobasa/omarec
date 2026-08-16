@@ -1,0 +1,15 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "response": {
+    "type": "hello",
+    "daemon_version": "1.0.0",
+    "protocol": 1,
+    "features": [
+      "plan",
+      "capability_probe",
+      "watch",
+      "doctor"
+    ]
+  }
+}

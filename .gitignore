@@ -1,0 +1,8 @@
+/target/
+*.swp
+*.tmp
+*.part
+.DS_Store
+.env
+result
+docs/temp

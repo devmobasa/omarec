@@ -1,0 +1,7 @@
+{
+  "kind": "hardware_matrix",
+  "source": "HARDWARE.md M8 topology rows",
+  "capture_date": "2026-08-14",
+  "command": "hand-authored qualification matrix; evidence files are recorded by scripts/hardware-qualify.sh",
+  "sanitization": "no host captures in this document; row status stays untested until evidence exists"
+}

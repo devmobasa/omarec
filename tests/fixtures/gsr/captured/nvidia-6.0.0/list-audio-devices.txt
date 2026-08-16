@@ -1,0 +1,5 @@
+default_output|Default output
+default_input|Default input
+alsa_output.pci-example_onboard.analog-stereo.monitor|Monitor of Built-in Audio Analog Stereo
+alsa_input.usb-example_Microphone-00.mono-fallback|USB Microphone
+alsa_output.pci-example_hdmi.hdmi-stereo.monitor|Monitor of HDMI Audio Digital Stereo

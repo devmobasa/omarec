@@ -1,0 +1,18 @@
+{
+  "protocol": 1,
+  "sequence": 8,
+  "daemon_lifetime_id": "00000000-0000-0000-0000-000000000002",
+  "event": {
+    "type": "state_changed",
+    "snapshot": {
+      "session_id": "00000000-0000-0000-0000-000000000001",
+      "phase": "recording",
+      "output": "/tmp/demo.mp4",
+      "started_realtime_ms": 1786462930123,
+      "first_frame_monotonic_us": 84294012345,
+      "paused": false,
+      "last_error": null,
+      "warnings": []
+    }
+  }
+}

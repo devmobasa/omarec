@@ -1,0 +1,29 @@
+[package]
+name = "omarecd"
+description = "Per-user recording orchestration daemon for omarec"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "omarecd"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+omarec-backend-gsr = { path = "../omarec-backend-gsr", version = "=1.0.0" }
+omarec-core = { path = "../omarec-core", version = "=1.0.0" }
+omarec-protocol = { path = "../omarec-protocol", version = "=1.0.0" }
+omarec-supervisor = { path = "../omarec-supervisor", version = "=1.0.0" }
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+uuid.workspace = true
+rustix.workspace = true
+
+[lints]
+workspace = true

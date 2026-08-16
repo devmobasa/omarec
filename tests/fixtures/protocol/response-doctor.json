@@ -1,0 +1,20 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "response": {
+    "type": "doctor",
+    "report": {
+      "ok": true,
+      "checks": [
+        {
+          "id": "gsr_ipc",
+          "status": "pass",
+          "summary": "per-instance GSR IPC appears available",
+          "detail": null,
+          "remediation": null
+        }
+      ],
+      "redactions_applied": ["home", "xdg_runtime_dir"]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "protocol": 1,
+  "sequence": 1,
+  "event": {
+    "type": "heartbeat"
+  }
+}

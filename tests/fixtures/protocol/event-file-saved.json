@@ -1,0 +1,10 @@
+{
+  "protocol": 1,
+  "sequence": 10,
+  "daemon_lifetime_id": "00000000-0000-0000-0000-000000000002",
+  "event": {
+    "type": "file_saved",
+    "session_id": "00000000-0000-0000-0000-000000000001",
+    "output": "/tmp/demo.mp4"
+  }
+}

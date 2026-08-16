@@ -1,0 +1,81 @@
+# ~/.config/omarec/config.toml
+# Every setting is optional. This file is the v1 schema used by the daemon.
+
+version = 1
+default_profile = "default"
+
+[daemon]
+startup_timeout_ms = 10000
+control_timeout_ms = 20000
+finalization_timeout_ms = 120000
+terminal_state_retention_ms = 5000
+capability_cache_ms = 5000
+max_protocol_frame_bytes = 1048576
+
+[output]
+filename = "%Y-%m-%d_%H-%M-%S"
+default_container = "mp4"
+overwrite = false
+minimum_free_space_mib = 512
+warn_free_space_mib = 2048
+
+[backend]
+preferred = "auto"
+allow_portal_fallback = true
+allow_cpu_encoding_fallback = true
+allow_native_webcam_composition = true
+allow_compatibility_webcam_overlay = true
+
+[postprocess]
+default = "validate_only"
+ffprobe_binary = "ffprobe"
+ffmpeg_binary = "ffmpeg"
+
+[diagnostics]
+retain_sessions = 25
+journal_lines = 200
+redact_user_paths = true
+redact_hostnames = true
+
+[binaries]
+recorder_binary = "gpu-screen-recorder"
+recorder_cli_binary = "gsr-cli"
+systemd_run_binary = "systemd-run"
+systemctl_binary = "systemctl"
+journalctl_binary = "journalctl"
+
+[profiles.default]
+fps = 60
+codec = "auto"
+frame_mode = "constant"
+container = "mp4"
+fallback_cpu_encoding = true
+exclude_metadata = true
+postprocess = "validate_only"
+audio_tracks = [
+  [{ kind = "default_output" }],
+]
+
+[profiles.presentation]
+fps = 30
+codec = "h264"
+frame_mode = "constant"
+container = "mp4"
+fallback_cpu_encoding = true
+exclude_metadata = true
+postprocess = "validate_only"
+audio_tracks = [
+  [{ kind = "default_output" }, { kind = "default_input" }],
+]
+
+[profiles.gameplay]
+fps = 60
+codec = "auto"
+frame_mode = "variable"
+container = "mp4"
+fallback_cpu_encoding = false
+exclude_metadata = true
+postprocess = "validate_only"
+audio_tracks = [
+  [{ kind = "default_output" }],
+]

@@ -1,0 +1,4 @@
+DP-1|2560x1440
+HDMI-A-1|1080x1920
+region
+portal

@@ -1,0 +1,16 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "request": {
+    "type": "start",
+    "request": {
+      "target": {
+        "kind": "monitor",
+        "name": "DP-1"
+      },
+      "profile": "default",
+      "output": "/tmp/demo.mp4",
+      "overrides": {}
+    }
+  }
+}

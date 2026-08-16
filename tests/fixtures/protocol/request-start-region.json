@@ -1,0 +1,27 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "request": {
+    "type": "start",
+    "request": {
+      "target": {
+        "kind": "region",
+        "geometry": {
+          "x": -1920,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "coordinate_space": "logical",
+        "evidence": {
+          "monitor": "HDMI-A-1",
+          "scale": "1.0",
+          "transform": 1
+        }
+      },
+      "profile": "default",
+      "output": "/tmp/demo.mp4",
+      "overrides": {}
+    }
+  }
+}

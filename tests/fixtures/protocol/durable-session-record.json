@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "session_id": "00000000-0000-0000-0000-000000000001",
+  "phase": "preparing",
+  "operation_generation": 1,
+  "unit_name": "omarec-session-00000000-0000-0000-0000-000000000001.service",
+  "runtime_directory": "/run/user/1000/omarec/sessions/00000000-0000-0000-0000-000000000001",
+  "gsr_ipc_socket": "/run/user/1000/omarec/sessions/00000000-0000-0000-0000-000000000001/gsr.sock",
+  "first_frame_timestamp": "/home/alice/Videos/.omarec-00000000-0000-0000-0000-000000000001.part.mp4.ts",
+  "staging_output": "/home/alice/Videos/.omarec-00000000-0000-0000-0000-000000000001.part.mp4",
+  "final_output": "/home/alice/Videos/demo.mp4",
+  "evaluated": null,
+  "created_unix_ms": 1786462930123,
+  "updated_unix_ms": 1786462930123,
+  "last_error": null,
+  "warnings": []
+}

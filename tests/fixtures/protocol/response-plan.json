@@ -1,0 +1,34 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "response": {
+    "type": "plan",
+    "plan": {
+      "preview_id": "00000000-0000-0000-0000-000000000003",
+      "advisory": true,
+      "session_id": null,
+      "runtime_directory": "/run/user/1000/omarec/sessions/preview",
+      "gsr_ipc_socket": "/run/user/1000/omarec/sessions/preview/gsr.sock",
+      "first_frame_timestamp": "/tmp/.omarec-preview.part.mp4.ts",
+      "staging_output": "/tmp/.omarec-preview.part.mp4",
+      "final_output": "/tmp/demo.mp4",
+      "recorder": {
+        "program": "gpu-screen-recorder",
+        "arguments": [
+          "-w",
+          "DP-1"
+        ],
+        "environment": []
+      },
+      "supervisor": {
+        "program": "systemd-run",
+        "arguments": [
+          "--user"
+        ],
+        "environment": []
+      },
+      "warnings": [],
+      "rationale": []
+    }
+  }
+}

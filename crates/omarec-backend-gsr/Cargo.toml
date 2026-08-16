@@ -1,0 +1,18 @@
+[package]
+name = "omarec-backend-gsr"
+description = "GPU Screen Recorder capability discovery, command planning, and IPC adapter"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+omarec-core = { path = "../omarec-core", version = "=1.0.0" }
+serde.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+
+[lints]
+workspace = true

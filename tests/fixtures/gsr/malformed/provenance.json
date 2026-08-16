@@ -1,0 +1,13 @@
+{
+  "kind": "malformed_probe",
+  "source": "gpu-screen-recorder",
+  "version": "6.0.0",
+  "capture_date": "2026-08-13",
+  "command": "hand-authored negative parser fixtures",
+  "sanitization": "Not captured from a host.",
+  "expected": {
+    "empty.txt": "no sections",
+    "truncated-section.txt": "missing values and incomplete keys",
+    "unknown-section.txt": "unknown section preserved as raw evidence"
+  }
+}

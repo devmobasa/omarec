@@ -1,0 +1,8 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "response": {
+    "type": "reloaded",
+    "config_generation": 2
+  }
+}

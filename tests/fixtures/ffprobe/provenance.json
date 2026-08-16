@@ -1,0 +1,7 @@
+{
+  "kind": "ffprobe_golden",
+  "source": "synthetic ffprobe -print_format json documents",
+  "capture_date": "2026-08-14",
+  "command": "hand-authored bounded ffprobe JSON for video and audio-only containers",
+  "sanitization": "no host paths or user names"
+}

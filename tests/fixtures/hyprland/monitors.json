@@ -1,0 +1,30 @@
+[
+  {
+    "id": 0,
+    "name": "DP-1",
+    "description": "Example 27-inch display",
+    "width": 2560,
+    "height": 1440,
+    "refreshRate": 165.0,
+    "x": 0,
+    "y": 0,
+    "activeWorkspace": { "id": 1, "name": "1" },
+    "focused": true,
+    "scale": 1.25,
+    "transform": 0
+  },
+  {
+    "id": 1,
+    "name": "HDMI-A-1",
+    "description": "Example portrait display",
+    "width": 1080,
+    "height": 1920,
+    "refreshRate": 60.0,
+    "x": -1080,
+    "y": 0,
+    "activeWorkspace": { "id": 2, "name": "2" },
+    "focused": false,
+    "scale": 1.0,
+    "transform": 1
+  }
+]

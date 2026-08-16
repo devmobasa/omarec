@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "community.omarec",
+  "name": "Screen Recording (omarec)",
+  "version": "0.1.0",
+  "author": "devmobasa",
+  "description": "Live omarec recording state: bar chip with elapsed timer and an anchored dropdown with start/pause/stop, backed by omarecd",
+  "license": "MIT",
+  "kinds": ["service", "bar-widget"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "RecordingWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Screen Recording",
+    "description": "Recording state chip with elapsed timer",
+    "category": "Plugin",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

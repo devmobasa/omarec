@@ -1,0 +1,19 @@
+{
+  "kind": "upstream_script",
+  "source": "https://github.com/basecamp/omarchy",
+  "path": "bin/omarchy-capture-screenrecording",
+  "ref": "quattro",
+  "commit": "8b9e43d3e54f7b790788aa9fbb04ea61a78de5bd",
+  "capture_date": "2026-08-13",
+  "command": "curl -fsSL https://raw.githubusercontent.com/basecamp/omarchy/8b9e43d3e54f7b790788aa9fbb04ea61a78de5bd/bin/omarchy-capture-screenrecording",
+  "sanitization": "Unmodified upstream script.",
+  "related": {
+    "omarchy-capture-region": "199bd01f9400a6b784365b686f9c51ae9d45a150"
+  },
+  "notes": [
+    "omarchy-capture-region smart --match-monitor emits logical coordinates.",
+    "The adapter must not relabel those coordinates as physical pixels.",
+    "Stop still uses broad process-name matching; native omarec must not.",
+    "--fullscreen records the focused monitor without opening the picker."
+  ]
+}

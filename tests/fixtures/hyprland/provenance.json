@@ -1,0 +1,15 @@
+{
+  "kind": "synthetic_topology",
+  "source": "hyprctl -j monitors",
+  "version": null,
+  "capture_date": "2026-08-11",
+  "command": "hand-authored Hyprland monitor JSON for fractional scale and a transformed secondary",
+  "sanitization": "No host capture. Display names are generic.",
+  "expected": {
+    "monitors": ["DP-1", "HDMI-A-1"],
+    "focused": "DP-1",
+    "scales": [1.25, 1.0],
+    "transforms": [0, 1],
+    "coordinate_space": "logical"
+  }
+}

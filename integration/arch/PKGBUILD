@@ -1,0 +1,85 @@
+# Maintainer: omarec contributors
+pkgname=omarec-git
+pkgver=1.0.0.r0.g0000000
+pkgrel=1
+pkgdesc='Reliable GPU Screen Recorder controller for Omarchy/Hyprland'
+arch=('x86_64')
+url='https://git.ibro.me/ibro/omarec'
+license=('MIT' 'Apache-2.0')
+depends=('gpu-screen-recorder>=6.0.0' 'gtk4' 'gtk4-layer-shell' 'jq' 'systemd-libs')
+optdepends=(
+  'ffmpeg: output validation, post-processing, and notification thumbnails'
+  'hyprland: monitor topology probes used by doctor and selection adapters'
+  'omarchy: Quattro shell and selection integration'
+  'libnotify: saved-recording notifications without Omarchy'
+)
+makedepends=('cargo' 'git' 'python' 'rust>=1.95')
+provides=('omarec')
+conflicts=('omarec')
+install=omarec.install
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd omarec
+  git describe --long --tags --abbrev=7 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' \
+    || printf '1.0.0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+prepare() {
+  cd omarec
+  [[ -f Cargo.lock ]] || cargo generate-lockfile
+}
+
+build() {
+  cd omarec
+  cargo build --release --locked --bin omarec --bin omarecd
+}
+
+check() {
+  cd omarec
+  cargo test --release --locked --workspace
+  bash tests/dispatcher/test_router.sh
+  bash tests/notify/test_notifier.sh
+  bash tests/quattro/test_watch_consumer.sh
+  bash tests/scripts/test_validators.sh
+  bash scripts/hardware-matrix.sh --check
+  bash scripts/static-check.sh
+}
+
+package() {
+  cd omarec
+  install -Dm755 target/release/omarec "$pkgdir/usr/bin/omarec"
+  install -Dm755 target/release/omarecd "$pkgdir/usr/bin/omarecd"
+  install -Dm755 integration/omarchy/bin/omarchy-capture-screenrecording \
+    "$pkgdir/usr/bin/omarchy-capture-screenrecording"
+  install -Dm755 integration/omarchy/bin/omarchy-capture-screenrecording-omarec \
+    "$pkgdir/usr/bin/omarchy-capture-screenrecording-omarec"
+  install -Dm755 integration/omarchy/bin/omarchy-capture-screenrecording-legacy \
+    "$pkgdir/usr/bin/omarchy-capture-screenrecording-legacy"
+  install -Dm755 integration/omarchy/bin/omarec-notify \
+    "$pkgdir/usr/bin/omarec-notify"
+  install -Dm644 integration/systemd/omarec.service \
+    "$pkgdir/usr/lib/systemd/user/omarec.service"
+  install -Dm644 integration/systemd/omarec-notify.service \
+    "$pkgdir/usr/lib/systemd/user/omarec-notify.service"
+  install -Dm644 integration/config/config.example.toml \
+    "$pkgdir/usr/share/doc/omarec/config.example.toml"
+  install -Dm644 tests/fixtures/hardware/matrix.json \
+    "$pkgdir/usr/share/omarec/hardware-matrix.json"
+  install -Dm644 RELEASE.md "$pkgdir/usr/share/doc/omarec/RELEASE.md"
+  install -Dm644 HARDWARE.md "$pkgdir/usr/share/doc/omarec/HARDWARE.md"
+  install -Dm644 LICENSE-MIT "$pkgdir/usr/share/licenses/$pkgname/LICENSE-MIT"
+  install -Dm644 LICENSE-APACHE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-APACHE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/omarec/README.md"
+  install -Dm644 integration/quickshell/community.omarec/manifest.json \
+    "$pkgdir/usr/share/omarec/quickshell/community.omarec/manifest.json"
+  install -Dm644 integration/quickshell/community.omarec/Service.qml \
+    "$pkgdir/usr/share/omarec/quickshell/community.omarec/Service.qml"
+  install -Dm644 integration/quickshell/community.omarec/RecordingWidget.qml \
+    "$pkgdir/usr/share/omarec/quickshell/community.omarec/RecordingWidget.qml"
+  install -Dm644 integration/quickshell/community.omarec/README.md \
+    "$pkgdir/usr/share/omarec/quickshell/community.omarec/README.md"
+  install -Dm644 integration/omarchy/menu/omarchy-menu.jsonc \
+    "$pkgdir/usr/share/omarec/omarchy/omarchy-menu.jsonc"
+}

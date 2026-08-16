@@ -1,0 +1,11 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "response": {
+    "type": "error",
+    "code": "session_mismatch",
+    "message": "the client expected a different session",
+    "retryable": false,
+    "details": null
+  }
+}

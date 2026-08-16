@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Omarchy metadata
+# @description Route screen recording to omarec or the packaged legacy controller
+set -euo pipefail
+
+runtime="${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is required}"
+omarec_dir="$runtime/omarec"
+marker="$omarec_dir/owner"
+
+refuse() {
+  printf '%s\n' "$1" >&2
+  exit 3
+}
+
+owner_kind() {
+  if [[ -f $marker ]]; then
+    head -n1 "$marker"
+  fi
+}
+
+if [[ -L $marker ]]; then
+  refuse "owner marker is a symlink; refusing to route"
+fi
+
+kind="$(owner_kind || true)"
+
+if [[ -z ${kind:-} ]] && command -v pgrep >/dev/null 2>&1; then
+  if pgrep -x gpu-screen-recorder >/dev/null 2>&1; then
+    refuse "unowned gpu-screen-recorder process; refusing to route"
+  fi
+fi
+
+case "${kind:-}" in
+  native)
+    exec omarchy-capture-screenrecording-omarec "$@"
+    ;;
+  legacy)
+    exec omarchy-capture-screenrecording-legacy "$@"
+    ;;
+  "")
+    mkdir -p "$omarec_dir"
+    chmod 700 "$omarec_dir" 2>/dev/null || true
+    if [[ ${OMAREC_SCREENRECORDING:-1} == 0 ]]; then
+      printf 'legacy\n' >"$marker.tmp"
+      mv "$marker.tmp" "$marker"
+      exec omarchy-capture-screenrecording-legacy "$@"
+    fi
+    printf 'native\nprovisional\n' >"$marker.tmp"
+    mv "$marker.tmp" "$marker"
+    set +e
+    omarchy-capture-screenrecording-omarec "$@"
+    status=$?
+    set -e
+    if [[ $status -eq 0 ]]; then
+      exit 0
+    fi
+    second="$(sed -n '2p' "$marker" 2>/dev/null || true)"
+    if [[ $second == provisional ]]; then
+      rm -f "$marker"
+      printf 'legacy fallback after native preflight failure\n' >&2
+      exec omarchy-capture-screenrecording-legacy "$@"
+    fi
+    exit "$status"
+    ;;
+  *)
+    refuse "contradictory owner marker: $kind"
+    ;;
+esac

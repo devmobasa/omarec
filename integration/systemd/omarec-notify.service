@@ -1,0 +1,22 @@
+[Unit]
+Description=omarec desktop notifications for finished recordings
+PartOf=graphical-session.target
+After=graphical-session.target omarec.service
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/omarec-notify
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=%h %t %S
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=default.target

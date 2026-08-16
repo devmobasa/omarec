@@ -1,0 +1,7 @@
+{
+  "kind": "quattro-watch-stream",
+  "source": "synthetic",
+  "capture_date": "2026-08-14",
+  "command": "omarec --json watch",
+  "sanitization": "paths replaced with $HOME; no portal tokens"
+}

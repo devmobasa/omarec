@@ -1,0 +1,16 @@
+{
+  "kind": "upstream_script",
+  "source": "https://github.com/basecamp/omarchy",
+  "path": "bin/omarchy-capture-screenrecording",
+  "ref": "master",
+  "commit": "10c42afcf25163d78663e59f02f6de82db07ea0f",
+  "capture_date": "2026-08-13",
+  "command": "curl -fsSL https://raw.githubusercontent.com/basecamp/omarchy/10c42afcf25163d78663e59f02f6de82db07ea0f/bin/omarchy-capture-screenrecording",
+  "sanitization": "Unmodified upstream script.",
+  "notes": [
+    "Region geometry is compositor logical coordinates passed through as WxH+X+Y.",
+    "Desktop and microphone sources are mixed into one -a argument with |.",
+    "Stop matches gpu-screen-recorder by process name.",
+    "Picker cancellation returns before a recording process is started."
+  ]
+}

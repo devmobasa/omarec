@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+# Omarchy metadata
+# @description Record the screen through omarec (migration adapter)
+# @arg $1? Recording options
+set -euo pipefail
+
+runtime="${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is required}"
+omarec_dir="$runtime/omarec"
+marker="$omarec_dir/owner"
+
+record_desktop_audio=false
+record_microphone=false
+record_webcam=false
+webcam_device=""
+webcam_size="medium"
+fullscreen=false
+stop=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --fullscreen) fullscreen=true ;;
+    --with-desktop-audio) record_desktop_audio=true ;;
+    --with-microphone-audio) record_microphone=true ;;
+    --with-webcam) record_webcam=true ;;
+    --webcam-device=*) webcam_device="${arg#*=}" ;;
+    --webcam-size=*) webcam_size="${arg#*=}" ;;
+    --stop) stop=true ;;
+    *) printf 'Unsupported omarec migration option: %s\n' "$arg" >&2; exit 2 ;;
+  esac
+done
+
+# The legacy recorder refreshed the shell indicator on every start/stop;
+# keep that so the non-Quattro bar reflects recording state immediately.
+refresh_indicators() {
+  command -v omarchy-shell >/dev/null 2>&1 || return 0
+  omarchy-shell -q omarchy.indicators refresh >/dev/null 2>&1 || true
+}
+
+# Probe the daemon without autostarting it: a keybind press must not spawn
+# omarecd just to look, and an unreachable daemon means nothing is recording.
+status_phase=""
+status_session=""
+if command -v omarec >/dev/null 2>&1; then
+  status_json="$(omarec --no-autostart --json status 2>/dev/null || true)"
+  if [[ -n $status_json ]]; then
+    status_phase="$(jq -er '.response.snapshot.phase // empty' <<<"$status_json" 2>/dev/null || true)"
+    status_session="$(jq -er '.response.snapshot.session_id // empty' <<<"$status_json" 2>/dev/null || true)"
+  fi
+fi
+
+# Keep in sync with SessionPhase::is_active in omarec-core.
+session_active=false
+case "$status_phase" in
+  preparing | launching | recording | paused | stopping | finalizing | recovering)
+    session_active=true
+    ;;
+esac
+
+# The recording keybind toggles: any start request while a session is active
+# stops that session instead.
+if $stop || $session_active; then
+  if $session_active; then
+    if [[ -n $status_session ]]; then
+      omarec stop --session "$status_session"
+    else
+      omarec stop
+    fi
+  fi
+  rm -f "$marker"
+  refresh_indicators
+  exit 0
+fi
+
+# The daemon is idle. A marker carrying a session id survived a session that
+# ended without this adapter; clear it so routing returns to its default. A
+# `provisional` marker belongs to the routing wrapper during this invocation
+# and must stay for its preflight-fallback logic.
+if [[ -f $marker && ! -L $marker ]]; then
+  marker_session="$(sed -n '2p' "$marker" 2>/dev/null || true)"
+  if [[ -n $marker_session && $marker_session != provisional ]]; then
+    rm -f "$marker"
+  fi
+fi
+
+videos_dir="${OMARCHY_SCREENRECORD_DIR:-${XDG_VIDEOS_DIR:-$HOME/Videos}/Screenrecordings}"
+mkdir -p "$videos_dir"
+output="$videos_dir/$(date +'%Y-%m-%d_%H-%M-%S').mp4"
+
+args=(start --output "$output")
+if $fullscreen; then
+  monitor="$(hyprctl -j monitors | jq -er '.[] | select(.focused) | .name')"
+  args+=(--monitor "$monitor")
+else
+  selection="$(omarchy-capture-region smart --match-monitor)" || exit 0
+  [[ -n $selection ]] || exit 0
+  if [[ $selection == monitor:* ]]; then
+    args+=(--monitor "${selection#monitor:}")
+  elif [[ $selection =~ ^(-?[0-9]+),(-?[0-9]+)[[:space:]]([0-9]+)x([0-9]+)$ ]]; then
+    # The picker prints slurp's "X,Y WxH"; omarec expects WxH+X+Y.
+    args+=(
+      --region "${BASH_REMATCH[3]}x${BASH_REMATCH[4]}+${BASH_REMATCH[1]}+${BASH_REMATCH[2]}"
+      --coordinate-space logical
+    )
+  else
+    printf 'Unrecognized capture-region selection: %s\n' "$selection" >&2
+    exit 1
+  fi
+fi
+$record_desktop_audio && args+=(--desktop-audio)
+$record_microphone && args+=(--microphone)
+
+if $record_webcam; then
+  if [[ -z $webcam_device ]]; then
+    webcam_device="$(gpu-screen-recorder --list-v4l2-devices | awk -F'|' 'NF { print $1; exit }')"
+  fi
+  case "$webcam_size" in
+    small) webcam_percent=18 ;;
+    medium) webcam_percent=25 ;;
+    large) webcam_percent=33 ;;
+    *) printf 'Invalid webcam size: %s\n' "$webcam_size" >&2; exit 2 ;;
+  esac
+  args+=(--webcam "$webcam_device" --webcam-size-percent "$webcam_percent")
+fi
+
+mkdir -p "$omarec_dir"
+chmod 700 "$omarec_dir" 2>/dev/null || true
+accepted="$(omarec --json "${args[@]}" || true)"
+session="$(printf '%s' "$accepted" | jq -er '.response.session_id // empty' || true)"
+if [[ -z $session ]]; then
+  printf 'omarec start did not accept a session\n' >&2
+  exit 1
+fi
+printf 'native\n%s\n' "$session" >"$marker.tmp"
+mv "$marker.tmp" "$marker"
+refresh_indicators

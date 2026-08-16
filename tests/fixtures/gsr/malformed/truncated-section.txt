@@ -1,0 +1,5 @@
+section=system_info
+display_server
+gsr_version|
+section=gpu_info
+vendor

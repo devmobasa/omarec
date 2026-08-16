@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Omarchy metadata
+# @description Desktop notifications for finished omarec recordings
+set -euo pipefail
+
+command -v omarec >/dev/null 2>&1 || { printf 'omarec-notify: omarec not found\n' >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { printf 'omarec-notify: jq not found\n' >&2; exit 1; }
+
+runtime="${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is required}"
+thumb_dir="$runtime/omarec/thumbnails"
+last_saved=""
+
+# A session that ends without the keybind adapter (crash, recovery) must
+# still clear the non-Quattro bar indicator.
+refresh_indicators() {
+  command -v omarchy-shell >/dev/null 2>&1 || return 0
+  omarchy-shell -q omarchy.indicators refresh >/dev/null 2>&1 || true
+}
+
+send_notification() {
+  local urgency="$1" headline="$2" description="$3" image="$4" exec_command="$5"
+  if command -v omarchy-notification-send >/dev/null 2>&1; then
+    local args=(-u "$urgency" --app-name omarec)
+    [[ -n $image ]] && args+=(--image "$image")
+    [[ -n $exec_command ]] && args+=(--exec "$exec_command")
+    omarchy-notification-send "${args[@]}" "$headline" "$description" || true
+  elif command -v notify-send >/dev/null 2>&1; then
+    local args=(-u "$urgency" -a omarec)
+    [[ -n $image ]] && args+=(-i "$image")
+    notify-send "${args[@]}" "$headline" "$description" || true
+  fi
+}
+
+make_thumbnail() {
+  local video="$1" thumb
+  command -v ffmpeg >/dev/null 2>&1 || return 1
+  mkdir -p "$thumb_dir"
+  chmod 700 "$thumb_dir" 2>/dev/null || true
+  thumb="$thumb_dir/$(basename "${video%.*}").png"
+  # The first frames of a fresh recording can predate the first keyframe;
+  # fall back to frame zero when the one-second seek fails.
+  if ffmpeg -y -v error -ss 1 -i "$video" -frames:v 1 -vf 'scale=320:-2' "$thumb" 2>/dev/null ||
+    ffmpeg -y -v error -i "$video" -frames:v 1 -vf 'scale=320:-2' "$thumb" 2>/dev/null; then
+    printf '%s\n' "$thumb"
+    return 0
+  fi
+  rm -f "$thumb"
+  return 1
+}
+
+handle_line() {
+  local line="$1" kind
+  kind="$(jq -er '.event.type // empty' <<<"$line" 2>/dev/null || true)"
+  case "$kind" in
+    file_saved)
+      local session output image="" open_command
+      session="$(jq -er '.event.session_id // empty' <<<"$line" 2>/dev/null || true)"
+      output="$(jq -er '.event.output // empty' <<<"$line" 2>/dev/null || true)"
+      [[ -n $output ]] || return 0
+      # Watch reconnects can redeliver the last event; notify each save once.
+      [[ "$session:$output" == "$last_saved" ]] && return 0
+      last_saved="$session:$output"
+      image="$(make_thumbnail "$output" || true)"
+      printf -v open_command 'xdg-open %q' "$output"
+      send_notification normal 'Screen recording saved' "$(basename "$output")" \
+        "$image" "$open_command"
+      refresh_indicators
+      ;;
+    error)
+      local message
+      message="$(jq -er '.event.message // empty' <<<"$line" 2>/dev/null || true)"
+      send_notification critical 'Screen recording error' "${message:-unknown error}" '' ''
+      refresh_indicators
+      ;;
+  esac
+}
+
+while true; do
+  while IFS= read -r line; do
+    handle_line "$line"
+  done < <(omarec --json watch 2>/dev/null || true)
+  [[ ${OMAREC_NOTIFY_ONCE:-0} == 1 ]] && break
+  sleep 5
+done

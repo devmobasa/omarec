@@ -1,0 +1,9 @@
+{
+  "kind": "synthetic_probe",
+  "source": "gpu-screen-recorder",
+  "version": "6.0.0",
+  "capture_date": "2026-08-11",
+  "command": "hand-authored list documents matching GSR pipe-delimited list syntax",
+  "sanitization": "Generic connector and audio names.",
+  "files": ["capture-options.txt", "audio-devices.txt"]
+}

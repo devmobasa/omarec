@@ -1,0 +1,30 @@
+[package]
+name = "omarec-cli"
+description = "Command-line client for omarec"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "omarec"
+path = "src/main.rs"
+
+[features]
+default = ["layer-shell"]
+layer-shell = ["dep:gtk4-layer-shell"]
+
+[dependencies]
+clap.workspace = true
+gtk4 = "0.9"
+gtk4-layer-shell = { version = "0.4", optional = true }
+omarec-core = { path = "../omarec-core", version = "=1.0.0" }
+omarec-protocol = { path = "../omarec-protocol", version = "=1.0.0" }
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+uuid.workspace = true
+
+[lints]
+workspace = true

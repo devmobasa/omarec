@@ -1,0 +1,39 @@
+{
+  "protocol": 1,
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "response": {
+    "type": "capabilities",
+    "capabilities": {
+      "recorder_version": "6.0.0",
+      "capture_device": "gpu",
+      "encoding_device": "gpu",
+      "capture_options": [
+        "screen",
+        "portal"
+      ],
+      "monitors": [
+        "DP-1"
+      ],
+      "cameras": [
+        "/dev/video0"
+      ],
+      "audio_devices": [
+        "default_output"
+      ],
+      "applications": [],
+      "codecs": [
+        "h264",
+        "hevc"
+      ],
+      "portal_available": true,
+      "ipc_available": true,
+      "native_multi_source_available": true,
+      "generation": 3,
+      "probed_unix_ms": 1786462930123,
+      "raw_probe": [
+        "version: 6.0.0"
+      ],
+      "warnings": []
+    }
+  }
+}

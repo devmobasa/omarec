@@ -1,0 +1,9 @@
+{
+  "protocol": 1,
+  "sequence": 11,
+  "daemon_lifetime_id": "00000000-0000-0000-0000-000000000002",
+  "event": {
+    "type": "config_reloaded",
+    "generation": 2
+  }
+}

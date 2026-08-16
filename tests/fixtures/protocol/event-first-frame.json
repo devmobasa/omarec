@@ -1,0 +1,9 @@
+{
+  "protocol": 1,
+  "sequence": 9,
+  "daemon_lifetime_id": "00000000-0000-0000-0000-000000000002",
+  "event": {
+    "type": "first_frame",
+    "session_id": "00000000-0000-0000-0000-000000000001"
+  }
+}

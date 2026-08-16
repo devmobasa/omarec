@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+prefix="${OMAREC_PREFIX:-$HOME/.local}"
+build_dir="${XDG_CACHE_HOME:-$HOME/.cache}/omarec/build"
+
+if ! command -v omarchy-pkg-add >/dev/null; then
+  printf 'install-omarchy: omarchy-pkg-add is unavailable; this installer requires Omarchy\n' >&2
+  exit 1
+fi
+
+omarchy-pkg-add \
+  gpu-screen-recorder ffmpeg jq gtk4 gtk4-layer-shell pkgconf
+
+if ! command -v cargo >/dev/null; then
+  omarchy-pkg-add rust
+fi
+
+export OMAREC_PREFIX="$prefix"
+export CARGO_TARGET_DIR="$build_dir"
+bash "$repo_dir/scripts/install-user.sh" --skip-deps
+
+"$prefix/bin/omarec" --version

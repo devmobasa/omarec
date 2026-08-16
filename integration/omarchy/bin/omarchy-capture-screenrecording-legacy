@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Packaged Omarchy recorder remains independently callable.
+# This wrapper execs the distro copy when present; tests supply a fake on PATH.
+set -euo pipefail
+
+if [[ -x /usr/share/omarchy/bin/omarchy-capture-screenrecording-legacy ]]; then
+  exec /usr/share/omarchy/bin/omarchy-capture-screenrecording-legacy "$@"
+fi
+
+# Keep a distinct command even when the distro file is absent so rollback
+# packaging can replace this wrapper without renaming the dispatcher.
+printf 'omarchy-capture-screenrecording-legacy is not installed\n' >&2
+exit 1

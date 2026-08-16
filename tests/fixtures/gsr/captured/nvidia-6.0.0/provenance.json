@@ -1,0 +1,22 @@
+{
+  "kind": "captured_probe",
+  "source": "gpu-screen-recorder",
+  "version": "6.0.0",
+  "capture_date": "2026-08-13",
+  "command": "gpu-screen-recorder --version/--info/--help/--list-* captured on 2026-08-13",
+  "host": {
+    "vendor": "nvidia",
+    "display_server": "wayland",
+    "os": "Arch Linux"
+  },
+  "sanitization": "Replaced host-specific PipeWire device names and application names with generic placeholders. Left connector names, codec lists, GPU vendor, and public CLI syntax unchanged.",
+  "expected": {
+    "gsr_version": "6.0.0",
+    "vendor": "nvidia",
+    "portal": true,
+    "region": true,
+    "ipc_flag": true,
+    "first_frame_ts_flag": true,
+    "cameras": []
+  }
+}

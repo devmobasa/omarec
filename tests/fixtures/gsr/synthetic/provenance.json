@@ -1,0 +1,18 @@
+{
+  "kind": "synthetic_probe",
+  "source": "gpu-screen-recorder",
+  "version": "6.0.0",
+  "capture_date": "2026-08-13",
+  "command": "hand-authored from the GSR 6.0.0 --info section format",
+  "sanitization": "No host capture. Connector names, codecs, and vendors are representative fixtures for parser and policy tests.",
+  "expected": {
+    "documents": [
+      "amd-info.txt",
+      "intel-info.txt",
+      "intel-legacy-info.txt",
+      "hybrid-info.txt",
+      "cameras.txt",
+      "transformed-capture-options.txt"
+    ]
+  }
+}

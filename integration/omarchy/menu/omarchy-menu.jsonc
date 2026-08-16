@@ -1,0 +1,46 @@
+{
+  // Template for ~/.config/omarchy/extensions/omarchy-menu.jsonc
+  //
+  // Merge these entries into your own extension file. Do not replace a
+  // customized user file with this template.
+  //
+  // Prefer ~/.local/bin when `omarec` is there (cargo / README install).
+  // Fall back to /usr/bin only when /usr/bin/omarec exists. Never a bare
+  // dispatcher name, and never /usr/bin/omarchy-capture-screenrecording
+  // alone: that path is Omarchy's legacy recorder until the omarec package
+  // owns it.
+  //
+  // Prefix used by every action:
+  //   d="$HOME/.local/bin"; test -x "$d/omarec" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1
+  //
+  // The stop/pause `when` gates use omarec's owner marker, which exists
+  // exactly while a dispatcher-owned recording runs.
+
+  "trigger.capture.screenrecord.stop": {
+    "when": "test -f \"$XDG_RUNTIME_DIR/omarec/owner\"",
+    "action": "d=\"$HOME/.local/bin\"; test -x \"$d/omarec\" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1; \"$d/omarchy-capture-screenrecording\" --stop"
+  },
+  "trigger.capture.screenrecord.pause": {
+    "icon": "󰏤",
+    "label": "Pause / Resume",
+    "when": "test -f \"$XDG_RUNTIME_DIR/omarec/owner\"",
+    "action": "d=\"$HOME/.local/bin\"; test -x \"$d/omarec\" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1; \"$d/omarec\" pause --toggle"
+  },
+  "trigger.capture.screenrecord.no-audio": {
+    "action": "d=\"$HOME/.local/bin\"; test -x \"$d/omarec\" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1; \"$d/omarchy-capture-screenrecording\""
+  },
+  "trigger.capture.screenrecord.desktop-audio": {
+    "action": "d=\"$HOME/.local/bin\"; test -x \"$d/omarec\" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1; \"$d/omarchy-capture-screenrecording\" --with-desktop-audio"
+  },
+  "trigger.capture.screenrecord.microphone": {
+    "action": "d=\"$HOME/.local/bin\"; test -x \"$d/omarec\" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1; \"$d/omarchy-capture-screenrecording\" --with-desktop-audio --with-microphone-audio"
+  },
+  "trigger.capture.screenrecord.webcam": {
+    "action": "d=\"$HOME/.local/bin\"; test -x \"$d/omarec\" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1; \"$d/omarchy-capture-screenrecording\" --with-webcam --with-desktop-audio --with-microphone-audio"
+  },
+  "trigger.capture.screenrecord.fullscreen": {
+    "icon": "󰍹",
+    "label": "Fullscreen with desktop audio",
+    "action": "d=\"$HOME/.local/bin\"; test -x \"$d/omarec\" || { test -x /usr/bin/omarec && d=/usr/bin; } || exit 1; \"$d/omarchy-capture-screenrecording\" --fullscreen --with-desktop-audio"
+  }
+}

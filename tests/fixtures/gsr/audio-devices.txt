@@ -1,0 +1,3 @@
+default_output|Default output
+alsa_output.pci-example_onboard.analog-stereo|Built-in Audio Analog Stereo
+alsa_input.usb-example_Microphone-00.mono-fallback|USB Microphone

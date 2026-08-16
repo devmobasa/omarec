@@ -1,0 +1,10 @@
+{
+  "kind": "parity_corpus",
+  "source": "pinned Omarchy recorder scripts",
+  "capture_date": "2026-08-13",
+  "command": "derived from tests/fixtures/omarchy/{regular,quattro}/omarchy-capture-screenrecording",
+  "sanitization": "No host paths. Cases describe intended argument and lifecycle behavior.",
+  "expected": {
+    "case_count": 14
+  }
+}

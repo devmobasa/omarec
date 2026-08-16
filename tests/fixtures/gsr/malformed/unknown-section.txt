@@ -1,0 +1,7 @@
+section=system_info
+display_server|wayland
+gsr_version|6.0.0
+section=future_vendor_extension
+widget|yes
+section=capture_options
+DP-1|2560x1440
